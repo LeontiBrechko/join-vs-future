@@ -30,12 +30,12 @@ public class JoinVsFutureRunner {
     public static void main(String[] args) throws Exception {
         SpringApplication.run(JoinVsFutureRunner.class, args);
 
-        // Exceptionally Compose
-        // final Supplier<CompletableFuture<Void>> testCallingMethod = JoinVsFutureRunner::runWithExceptionallyCompose;
         // .join() Test
         // final Supplier<CompletableFuture<Void>> testCallingMethod = JoinVsFutureRunner::runWithJoin;
         // Separate CompletableFuture
         final Supplier<CompletableFuture<Void>> testCallingMethod = JoinVsFutureRunner::runWithSeparateFuture;
+        // Exceptionally Compose
+        // final Supplier<CompletableFuture<Void>> testCallingMethod = JoinVsFutureRunner::runWithExceptionallyCompose;
 
         for (int i = 0; i < NUMBER_OF_TEST_RUNS; i++) {
             TEST_DURATIONS[i] = runTest(testCallingMethod);
@@ -67,16 +67,6 @@ public class JoinVsFutureRunner {
         return Duration.ofNanos(System.nanoTime() - startTime);
     }
 
-    private static CompletableFuture<Void> runWithExceptionallyCompose() {
-        return makeFirstAsyncRequest()
-                .exceptionallyCompose(exception -> {
-                    return makeSecondAsyncRequest()
-                            .thenAccept(voidResult -> {
-                                throw new CompletionException(exception);
-                            });
-                });
-    }
-
     private static CompletableFuture<Void> runWithJoin() {
         return makeFirstAsyncRequest()
                 .exceptionally(exception -> {
@@ -100,6 +90,14 @@ public class JoinVsFutureRunner {
                 });
 
         return resultFuture;
+    }
+
+    private static CompletableFuture<Void> runWithExceptionallyCompose() {
+        return makeFirstAsyncRequest()
+                .exceptionallyCompose(exception -> makeSecondAsyncRequest()
+                        .thenAccept(voidResult -> {
+                            throw new CompletionException(exception);
+                        }));
     }
 
     private static CompletableFuture<Void> makeFirstAsyncRequest() {
