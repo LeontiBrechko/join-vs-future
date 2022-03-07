@@ -118,7 +118,7 @@ public class JoinVsFutureRunner {
     private static SfnAsyncClient createSfnAsyncClient() {
         return SfnAsyncClient.builder()
                 // invalid, but DNS-resolvable, endpoint to cause a connection timeout error
-                // this will block an async invocation by the time specified in "conntectionTimeout"
+                // this will block an async invocation by the time specified in "connectionTimeout"
                 .endpointOverride(URI.create("http://amazon.com"))
                 .httpClientBuilder(
                         NettyNioAsyncHttpClient.builder()
