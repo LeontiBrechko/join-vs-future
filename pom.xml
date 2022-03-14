@@ -8,7 +8,7 @@
         <version>2.6.4</version>
         <relativePath/> <!-- lookup parent from repository -->
     </parent>
-    <groupId>com.leontibrechko.blog.test</groupId>
+    <groupId>net.leontibrechko.blog.test</groupId>
     <artifactId>join-vs-future</artifactId>
     <version>0.0.1-SNAPSHOT</version>
     <name>join-vs-future</name>
